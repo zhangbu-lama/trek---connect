@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug API server",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/server",
+      "program": "${workspaceFolder}/server/src/server.js",
+      "envFile": "${workspaceFolder}/server/.env",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Open app in Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/Client/src"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Run Trek Connect",
+      "preLaunchTask": "Run Trek Connect (API + Client)",
+      "configurations": ["Open app in Chrome"]
+    }
+  ]
+}

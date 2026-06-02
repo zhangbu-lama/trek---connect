@@ -1,0 +1,96 @@
+{
+  "folders": [
+    {
+      "name": "Client",
+      "path": "Client"
+    },
+    {
+      "name": "Server",
+      "path": "server"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true
+    },
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Server: dev",
+        "type": "npm",
+        "script": "dev",
+        "path": "server",
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "group": "trekconnect"
+        },
+        "isBackground": true,
+        "runOptions": { "instanceLimit": 1 }
+      },
+      {
+        "label": "Client: dev",
+        "type": "npm",
+        "script": "dev",
+        "path": "Client",
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "group": "trekconnect"
+        },
+        "isBackground": true,
+        "runOptions": { "instanceLimit": 1 }
+      },
+      {
+        "label": "Run Trek Connect (API + Client)",
+        "dependsOn": ["Server: dev", "Client: dev"],
+        "dependsOrder": "parallel",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug API server",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceFolder}/server",
+        "program": "${workspaceFolder}/server/src/server.js",
+        "envFile": "${workspaceFolder}/server/.env",
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "Open app in Chrome",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:5173",
+        "webRoot": "${workspaceFolder}/Client/src"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Run Trek Connect",
+        "preLaunchTask": "Run Trek Connect (API + Client)",
+        "configurations": ["Open app in Chrome"]
+      }
+    ]
+  }
+}

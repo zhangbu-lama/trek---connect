@@ -6,7 +6,15 @@
       "type": "npm",
       "script": "dev",
       "path": "server",
-      "problemMatcher": [],
+      "problemMatcher": {
+        "owner": "node",
+        "pattern": { "regexp": "^.*$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Server running on PORT"
+        }
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -20,7 +28,15 @@
       "type": "npm",
       "script": "dev",
       "path": "Client",
-      "problemMatcher": [],
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^.*$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Local:"
+        }
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -33,7 +49,31 @@
       "label": "Run Trek Connect (API + Client)",
       "dependsOn": ["Server: dev", "Client: dev"],
       "dependsOrder": "parallel",
-      "group": { "kind": "build", "isDefault": true }
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Install all dependencies",
+      "dependsOn": ["Install: server", "Install: Client"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "Install: server",
+      "type": "npm",
+      "script": "install",
+      "path": "server",
+      "problemMatcher": []
+    },
+    {
+      "label": "Install: Client",
+      "type": "npm",
+      "script": "install",
+      "path": "Client",
+      "problemMatcher": []
     }
   ]
 }
