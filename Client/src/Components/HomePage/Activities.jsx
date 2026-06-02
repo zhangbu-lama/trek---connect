@@ -7,32 +7,44 @@ const BASE_URL = 'http://localhost:8000';
 const Activities = () => {
   const [categories, setCategories] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getCategories = async () => {
+      setLoading(true);
+      setFetchError(null);
       try {
         const data = await fetchCategories();
-        const formatted = data.map((category) => ({
+        const list = Array.isArray(data) ? data : [];
+        const formatted = list.map((category) => ({
           ...category,
           image: category.image
             ? `${BASE_URL}/uploads/${category.image}`
-            : "https://source.unsplash.com/800x600/?nature",
+            : "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80",
         }));
         setCategories(formatted);
+        setActiveIndex(0);
       } catch (err) {
         console.error("Error fetching categories:", err);
+        setFetchError("Could not load activities. Make sure the API server is running.");
+      } finally {
+        setLoading(false);
       }
     };
     getCategories();
   }, []);
 
   const handleCarouselTransition = (direction) => {
-    const newIndex = (activeIndex + direction + categories.length) % categories.length;
+    if (categories.length === 0) return;
+    const newIndex =
+      (activeIndex + direction + categories.length) % categories.length;
     setActiveIndex(newIndex);
   };
 
   useEffect(() => {
+    if (categories.length <= 1) return;
     const interval = setInterval(() => {
       handleCarouselTransition(1);
     }, 5000);
@@ -54,8 +66,27 @@ const Activities = () => {
             <hr className="border-0 w-full h-1 bg-brand mt-2" />
           </h2>
 
-          <div className="w-full h-[60vh] relative overflow-hidden rounded-xl">
-            <div className="shadow-lg">
+          <div className="w-full h-[60vh] relative overflow-hidden rounded-xl bg-gray-100">
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center text-gray-600">
+                Loading activities…
+              </div>
+            )}
+            {!loading && fetchError && (
+              <div className="absolute inset-0 flex items-center justify-center text-red-600 px-6 text-center">
+                {fetchError}
+              </div>
+            )}
+            {!loading && !fetchError && categories.length === 0 && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-600 px-6 text-center gap-2">
+                <p>No activities yet.</p>
+                <p className="text-sm">
+                  Sign in as admin and add categories under{" "}
+                  <span className="font-semibold">Add Category</span>.
+                </p>
+              </div>
+            )}
+            <div className="shadow-lg h-full">
               {categories.map((cat, index) => (
                 <div
                   key={index}
@@ -84,20 +115,26 @@ const Activities = () => {
               ))}
             </div>
 
-            <div className="text-4xl absolute top-1/2 left-0 right-0 flex justify-between px-4">
-              <button
-                className="text-white bg-gray-800 hover:bg-gray-600 p-2 rounded-full"
-                onClick={() => handleCarouselTransition(-1)}
-              >
-                &laquo;
-              </button>
-              <button
-                className="text-white bg-gray-800 hover:bg-gray-600 p-2 rounded-full"
-                onClick={() => handleCarouselTransition(1)}
-              >
-                &raquo;
-              </button>
-            </div>
+            {categories.length > 1 && (
+              <div className="text-4xl absolute top-1/2 left-0 right-0 flex justify-between px-4 -translate-y-1/2">
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-600 p-2 rounded-full"
+                  onClick={() => handleCarouselTransition(-1)}
+                  aria-label="Previous activity"
+                >
+                  &laquo;
+                </button>
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-600 p-2 rounded-full"
+                  onClick={() => handleCarouselTransition(1)}
+                  aria-label="Next activity"
+                >
+                  &raquo;
+                </button>
+              </div>
+            )}
           </div>
         </section>
       </div>

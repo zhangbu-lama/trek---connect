@@ -16,31 +16,23 @@ const AdminLogin = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const validateForm = () => {
-    if (!formData.email || !formData.password) {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.email.trim() || !formData.password) {
       setFormError('Both fields are required.');
-      return false;
-    }
-
-    if (formData.email !== 'admin' || formData.password !== 'admin') {
-      setFormError('Invalid admin credentials.');
-      return false;
+      return;
     }
 
     setFormError('');
-    return true;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
     try {
-      await adminLogin(formData);
+      await adminLogin({
+        email: formData.email.trim(),
+        password: formData.password,
+      });
       navigate('/admin');
     } catch (err) {
       console.error('Admin login error:', err.message);
-      setFormError('Login failed. Please try again.');
+      setFormError(err.message || 'Login failed. Please try again.');
     }
   };
 
@@ -63,8 +55,8 @@ const AdminLogin = () => {
               onChange={handleChange}
               required
               className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="admin"
-              autoComplete="off"
+              placeholder="admin@gmail.com"
+              autoComplete="username"
             />
           </div>
           <div>
@@ -79,7 +71,8 @@ const AdminLogin = () => {
               onChange={handleChange}
               required
               className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="admin"
+              placeholder="••••••••"
+              autoComplete="current-password"
               autoComplete="off"
             />
           </div>

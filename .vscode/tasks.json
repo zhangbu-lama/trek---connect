@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Server: dev",
+      "type": "npm",
+      "script": "dev",
+      "path": "server",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "trekconnect"
+      },
+      "isBackground": true,
+      "runOptions": { "instanceLimit": 1 }
+    },
+    {
+      "label": "Client: dev",
+      "type": "npm",
+      "script": "dev",
+      "path": "Client",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "trekconnect"
+      },
+      "isBackground": true,
+      "runOptions": { "instanceLimit": 1 }
+    },
+    {
+      "label": "Run Trek Connect (API + Client)",
+      "dependsOn": ["Server: dev", "Client: dev"],
+      "dependsOrder": "parallel",
+      "group": { "kind": "build", "isDefault": true }
+    }
+  ]
+}
